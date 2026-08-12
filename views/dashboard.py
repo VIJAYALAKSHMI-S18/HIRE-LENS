@@ -7,18 +7,18 @@ from utils.theme import get_plotly_colors
 
 def render():
     if not st.session_state.get("user"):
-        st.warning("Please log in to view your personalized analytics dashboard.")
+        st.warning("PLEASE LOG IN TO VIEW YOUR PERSONALIZED ANALYTICS DASHBOARD.")
         return
 
     user = st.session_state.user
-    st.markdown(f"<h2>📊 Recruiter Analytics & Career Dashboard</h2>", unsafe_allow_html=True)
-    st.markdown(f"<p style='color: #94A3B8;'>Welcome back, <strong>{user['name']}</strong>! Track your ATS scores, skill matches, and resume performance history.</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-transform: uppercase;'>📊 RECRUITER ANALYTICS & CAREER DASHBOARD</h2>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color: #94A3B8; text-transform: uppercase;'>WELCOME BACK, <strong>{user['name'].upper()}</strong>! TRACK YOUR ATS SCORES, SKILL MATCHES, AND RESUME PERFORMANCE HISTORY.</p>", unsafe_allow_html=True)
 
     history = get_user_analyses(user["id"])
 
     if not history:
-        st.info("No analysis history recorded yet. Head over to the **Resume Analyzer** to run your first evaluation!")
-        if st.button("🚀 Analyze First Resume", key="dash_btn_first"):
+        st.info("NO ANALYSIS HISTORY RECORDED YET. HEAD OVER TO THE RESUME ANALYZER TO RUN YOUR FIRST EVALUATION!")
+        if st.button("🚀 ANALYZE FIRST RESUME", key="dash_btn_first"):
             st.session_state.current_page = "analyzer"
             st.rerun()
         return
@@ -34,13 +34,13 @@ def render():
 
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        st.metric(label="Total Analyses", value=total_analyses)
+        st.metric(label="TOTAL ANALYSES", value=total_analyses)
     with c2:
-        st.metric(label="Average ATS Score", value=f"{avg_ats}%")
+        st.metric(label="AVERAGE ATS SCORE", value=f"{avg_ats}%")
     with c3:
-        st.metric(label="Highest ATS Fit", value=f"{max_ats}%")
+        st.metric(label="HIGHEST ATS FIT", value=f"{max_ats}%")
     with c4:
-        st.metric(label="Skills Matched", value=total_matched_skills)
+        st.metric(label="SKILLS MATCHED", value=total_matched_skills)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -52,14 +52,14 @@ def render():
 
     with ch1:
         st.markdown("<div class='hirelens-card'>", unsafe_allow_html=True)
-        st.markdown("### ATS Score History")
+        st.markdown("<h3 style='text-transform: uppercase;'>ATS SCORE HISTORY</h3>", unsafe_allow_html=True)
         
         fig_hist = px.bar(
             df,
             x="created_at",
             y="ats_score",
             hover_data=["job_title", "resume_name"],
-            labels={"ats_score": "ATS Score (%)", "created_at": "Date"},
+            labels={"ats_score": "ATS SCORE (%)", "created_at": "DATE"},
             color="ats_score",
             color_continuous_scale=["#EF4444", "#F59E0B", "#4F8CFF", "#22C55E"]
         )
@@ -75,10 +75,10 @@ def render():
 
     with ch2:
         st.markdown("<div class='hirelens-card'>", unsafe_allow_html=True)
-        st.markdown("### Latest Score Breakdown")
+        st.markdown("<h3 style='text-transform: uppercase;'>LATEST SCORE BREAKDOWN</h3>", unsafe_allow_html=True)
         latest = df.iloc[0]
         
-        metrics = ["Skills Match", "Semantic Match", "Keywords", "Experience", "Education"]
+        metrics = ["SKILLS MATCH", "SEMANTIC MATCH", "KEYWORDS", "EXPERIENCE", "EDUCATION"]
         scores = [
             latest["skill_score"],
             latest["semantic_score"],
@@ -106,10 +106,13 @@ def render():
     # Recent Records Table
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("<div class='hirelens-card'>", unsafe_allow_html=True)
-    st.markdown("### Recent Target Job Fits")
+    st.markdown("<h3 style='text-transform: uppercase;'>RECENT TARGET JOB FITS</h3>", unsafe_allow_html=True)
     
     display_df = df[["job_title", "resume_name", "ats_score", "skill_score", "semantic_score", "created_at"]].copy()
-    display_df.columns = ["Job Title", "Resume File", "ATS Score (%)", "Skill Score (%)", "Semantic Match (%)", "Analysis Date"]
+    display_df.columns = ["JOB TITLE", "RESUME FILE", "ATS SCORE (%)", "SKILL SCORE (%)", "SEMANTIC MATCH (%)", "ANALYSIS DATE"]
     
     st.dataframe(display_df, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
+if __name__ == "__main__":
+    render()
