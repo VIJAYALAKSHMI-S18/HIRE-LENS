@@ -1,10 +1,11 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 def apply_theme(dark_mode=True, reduced_motion=False):
     """
     Injects custom HireLens styling into Streamlit:
     - Premium AI SaaS Theme (Dark & Light)
-    - Magnetic dual-layer glowing cursor
+    - Magnetic dual-layer glowing cursor (AI Reticle & Lens Trailing)
     - Neon click ripple bloom & touch response
     - Glassmorphism cards and smooth metric badges
     """
@@ -19,7 +20,7 @@ def apply_theme(dark_mode=True, reduced_motion=False):
         accent_purple = "#8B5CF6"
         accent_cyan = "#38BDF8"
         shadow_style = "0 10px 30px rgba(0, 0, 0, 0.45)"
-        cursor_outer_color = "rgba(139, 92, 246, 0.45)"
+        cursor_outer_color = "rgba(139, 92, 246, 0.25)"
         cursor_inner_color = "#38BDF8"
     else:
         bg_primary = "#F8FAFC"
@@ -32,59 +33,8 @@ def apply_theme(dark_mode=True, reduced_motion=False):
         accent_purple = "#7C3AED"
         accent_cyan = "#0284C7"
         shadow_style = "0 10px 25px rgba(0, 0, 0, 0.08)"
-        cursor_outer_color = "rgba(124, 58, 237, 0.35)"
+        cursor_outer_color = "rgba(124, 58, 237, 0.2)"
         cursor_inner_color = "#2563EB"
-
-    cursor_js = ""
-    if not reduced_motion:
-        cursor_js = f"""
-        <script>
-        (function() {{
-            if (window.innerWidth < 768) return; // Disable custom cursor on mobile
-
-            let outer = document.getElementById('hirelens-cursor-outer');
-            let inner = document.getElementById('hirelens-cursor-inner');
-
-            if (!outer) {{
-                outer = document.createElement('div');
-                outer.id = 'hirelens-cursor-outer';
-                document.body.appendChild(outer);
-            }}
-            if (!inner) {{
-                inner = document.createElement('div');
-                inner.id = 'hirelens-cursor-inner';
-                document.body.appendChild(inner);
-            }}
-
-            let mouseX = 0, mouseY = 0;
-            let outerX = 0, outerY = 0;
-
-            document.addEventListener('mousemove', function(e) {{
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                inner.style.transform = `translate3d(${{mouseX}}px, ${{mouseY}}px, 0)`;
-            }});
-
-            function loop() {{
-                outerX += (mouseX - outerX) * 0.15;
-                outerY += (mouseY - outerY) * 0.15;
-                outer.style.transform = `translate3d(${{outerX}}px, ${{outerY}}px, 0)`;
-                requestAnimationFrame(loop);
-            }}
-            loop();
-
-            document.addEventListener('click', function(e) {{
-                let ripple = document.createElement('div');
-                ripple.className = 'hirelens-click-ripple';
-                ripple.style.left = e.clientX + 'px';
-                ripple.style.top = e.clientY + 'px';
-                document.body.appendChild(ripple);
-
-                setTimeout(() => ripple.remove(), 400);
-            }});
-        }})();
-        </script>
-        """
 
     theme_css = f"""
     <style>
@@ -114,7 +64,7 @@ def apply_theme(dark_mode=True, reduced_motion=False):
         border-right: 1px solid {border_color} !important;
     }}
 
-    /* Magnetic Cursor Styles */
+    /* Theme-Tailored Custom Magnetic Pointer Styles */
     #hirelens-cursor-outer {{
         position: fixed;
         top: -16px;
@@ -126,8 +76,9 @@ def apply_theme(dark_mode=True, reduced_motion=False):
         border-radius: 50%;
         pointer-events: none;
         z-index: 999999;
-        transition: opacity 0.3s ease;
+        transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background 0.2s ease, top 0.2s ease, left 0.2s ease;
         backdrop-filter: blur(2px);
+        box-shadow: 0 0 15px {accent_purple}66;
     }}
 
     #hirelens-cursor-inner {{
@@ -140,7 +91,19 @@ def apply_theme(dark_mode=True, reduced_motion=False):
         border-radius: 50%;
         pointer-events: none;
         z-index: 999999;
-        box-shadow: 0 0 10px {accent_cyan};
+        box-shadow: 0 0 10px {accent_cyan}, 0 0 4px #FFFFFF;
+    }}
+
+    /* Hover reticle expansion over interactive elements */
+    button:hover ~ #hirelens-cursor-outer,
+    .stButton:hover ~ #hirelens-cursor-outer,
+    .hirelens-card:hover ~ #hirelens-cursor-outer {{
+        width: 44px;
+        height: 44px;
+        top: -22px;
+        left: -22px;
+        border-color: {accent_cyan};
+        background: rgba(56, 189, 248, 0.2);
     }}
 
     .hirelens-click-ripple {{
@@ -249,9 +212,60 @@ def apply_theme(dark_mode=True, reduced_motion=False):
         font-weight: 600 !important;
     }}
     </style>
-    {cursor_js}
     """
     st.markdown(theme_css, unsafe_allow_html=True)
+
+    if not reduced_motion:
+        cursor_js_code = f"""
+        <script>
+        (function() {{
+            const pDoc = window.parent.document;
+            if (window.parent.innerWidth < 768) return; // Mobile check
+
+            let outer = pDoc.getElementById('hirelens-cursor-outer');
+            let inner = pDoc.getElementById('hirelens-cursor-inner');
+
+            if (!outer) {{
+                outer = pDoc.createElement('div');
+                outer.id = 'hirelens-cursor-outer';
+                pDoc.body.appendChild(outer);
+            }}
+            if (!inner) {{
+                inner = pDoc.createElement('div');
+                inner.id = 'hirelens-cursor-inner';
+                pDoc.body.appendChild(inner);
+            }}
+
+            let mouseX = 0, mouseY = 0;
+            let outerX = 0, outerY = 0;
+
+            pDoc.addEventListener('mousemove', function(e) {{
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                inner.style.transform = 'translate3d(' + mouseX + 'px, ' + mouseY + 'px, 0)';
+            }});
+
+            function loop() {{
+                outerX += (mouseX - outerX) * 0.18;
+                outerY += (mouseY - outerY) * 0.18;
+                outer.style.transform = 'translate3d(' + outerX + 'px, ' + outerY + 'px, 0)';
+                window.parent.requestAnimationFrame(loop);
+            }}
+            loop();
+
+            pDoc.addEventListener('click', function(e) {{
+                let ripple = pDoc.createElement('div');
+                ripple.className = 'hirelens-click-ripple';
+                ripple.style.left = e.clientX + 'px';
+                ripple.style.top = e.clientY + 'px';
+                pDoc.body.appendChild(ripple);
+
+                setTimeout(function() {{ ripple.remove(); }}, 400);
+            }});
+        }})();
+        </script>
+        """
+        components.html(cursor_js_code, height=0, width=0)
 
 def get_plotly_colors(dark_mode=True):
     if dark_mode:
