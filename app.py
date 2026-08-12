@@ -104,3 +104,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Export top-level variables for serverless & WSGI builder compatibility (e.g. Vercel)
+app = main
+handler = main
+
