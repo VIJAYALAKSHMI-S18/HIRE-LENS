@@ -1,0 +1,32 @@
+{
+  "Programming": [
+    "Python", "Java", "C", "C++", "C#", "JavaScript", "TypeScript", "Go", "Rust",
+    "PHP", "Ruby", "Swift", "Kotlin", "Scala", "R", "Dart", "HTML", "CSS", "SQL", "Bash", "Shell"
+  ],
+  "AI_ML": [
+    "Machine Learning", "Deep Learning", "NLP", "Natural Language Processing", "Computer Vision",
+    "TensorFlow", "Keras", "PyTorch", "Scikit-Learn", "OpenCV", "Generative AI", "LLM",
+    "Transformers", "Hugging Face", "BERT", "GPT", "Reinforcement Learning", "Neural Networks",
+    "Data Mining", "Feature Engineering", "Model Deployment", "MLOps", "Pandas", "NumPy"
+  ],
+  "Frameworks": [
+    "Django", "Flask", "FastAPI", "Streamlit", "React", "React.js", "Next.js", "Vue.js",
+    "Angular", "Node.js", "Express.js", "Spring Boot", "ASP.NET", "Laravel", "Tailwind CSS", "Bootstrap"
+  ],
+  "Databases": [
+    "SQL", "MySQL", "PostgreSQL", "SQLite", "MongoDB", "Redis", "Cassandra", "DynamoDB",
+    "Oracle", "SQL Server", "Elasticsearch", "Neo4j", "Firebase"
+  ],
+  "Cloud": [
+    "AWS", "Amazon Web Services", "Azure", "Google Cloud", "GCP", "Docker", "Kubernetes",
+    "Terraform", "Serverless", "Lambda", "EC2", "S3", "Cloudflare"
+  ],
+  "Tools": [
+    "Git", "GitHub", "GitLab", "Bitbucket", "Docker", "Kubernetes", "VS Code", "Jira",
+    "Postman", "CI/CD", "Jenkins", "Linux", "Webpack", "Vite", "Figma"
+  ],
+  "Soft_Skills": [
+    "Communication", "Teamwork", "Leadership", "Problem Solving", "Time Management",
+    "Critical Thinking", "Agile", "Scrum", "Adaptability", "Collaboration", "Analytical Skills"
+  ]
+}
