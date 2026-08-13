@@ -99,6 +99,22 @@ def main():
 
     st.sidebar.markdown("<br><hr style='border-color: rgba(255,255,255,0.08);'><br>", unsafe_allow_html=True)
 
+    # ── Persistent Theme Toggle ──────────────────────────────────────
+    theme_icon  = "☀️" if dark_mode else "🌙"
+    theme_label = "SWITCH TO LIGHT MODE" if dark_mode else "SWITCH TO DARK MODE"
+    theme_hint  = "Currently: Dark" if dark_mode else "Currently: Light"
+
+    st.sidebar.markdown(
+        f"<div style='font-size:11px; color:#94A3B8; text-align:center; "
+        f"margin-bottom:6px; letter-spacing:0.5px;'>{theme_hint}</div>",
+        unsafe_allow_html=True
+    )
+    if st.sidebar.button(f"{theme_icon} {theme_label}", key="btn_sidebar_theme"):
+        st.session_state.dark_mode = not dark_mode
+        st.rerun()
+
+    st.sidebar.markdown("<br>", unsafe_allow_html=True)
+
     # Auth buttons in sidebar
     if is_logged_in():
         if st.sidebar.button("🚪 LOGOUT", key="btn_sidebar_logout"):
