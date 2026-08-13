@@ -7,19 +7,19 @@ def render():
 
     # Theme-adaptive color tokens
     if dark_mode:
-        h1_gradient   = "linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%)"
-        tagline_color = "#38BDF8"
-        body_color    = "#94A3B8"
+        h1_color        = "#FFFFFF"
+        tagline_color   = "#38BDF8"
+        body_color      = "#94A3B8"
         card_desc_color = "#94A3B8"
-        hr_color      = "rgba(255,255,255,0.08)"
+        hr_color        = "rgba(255,255,255,0.08)"
     else:
-        h1_gradient   = "linear-gradient(135deg, #0F172A 0%, #2563EB 100%)"
-        tagline_color = "#0284C7"
-        body_color    = "#475569"
+        h1_color        = "#0F172A"
+        tagline_color   = "#0284C7"
+        body_color      = "#475569"
         card_desc_color = "#475569"
-        hr_color      = "rgba(0,0,0,0.10)"
+        hr_color        = "rgba(0,0,0,0.10)"
 
-    # Hero Section
+    # Hero Section — solid color heading avoids broken gradient-clip in Streamlit iframe
     st.markdown(f"""
     <div style='text-align: center; padding: 48px 0 8px 0;'>
         <div style='display: inline-block; background: rgba(79, 140, 255, 0.12); color: #4F8CFF;
@@ -28,10 +28,8 @@ def render():
                     margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;'>
             ✨ NEXT-GEN AI CAREER PLATFORM
         </div>
-        <h1 style='font-size: 3.6rem; font-weight: 800;
-                   background: {h1_gradient};
-                   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-                   margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 2px;'>
+        <h1 style='font-size: 3.6rem; font-weight: 800; color: {h1_color};
+                   margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 4px;'>
             HIRELENS
         </h1>
         <h3 style='font-size: 1.35rem; color: {tagline_color}; font-weight: 600;
