@@ -24,20 +24,31 @@ def main():
     reduced_motion = st.session_state.get("reduced_motion", False)
     apply_theme(dark_mode=dark_mode, reduced_motion=reduced_motion)
 
-    # Force UPPERCASE styling on sidebar and headings
-    st.markdown("""
+    # Sidebar text color adapts to theme so labels are always readable
+    sidebar_text   = "#F8FAFC" if dark_mode else "#0F172A"
+    sidebar_subtext = "#94A3B8" if dark_mode else "#475569"
+
+    st.markdown(f"""
     <style>
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] div,
-    section[data-testid="stSidebar"] button,
-    section[data-testid="stSidebar"] span {
+    section[data-testid="stSidebar"] span {{
         text-transform: uppercase !important;
         letter-spacing: 0.5px;
-    }
-    h1, h2, h3, h4, .stButton > button {
+        color: {sidebar_text} !important;
+    }}
+    /* Radio option text */
+    section[data-testid="stSidebar"] .stRadio label p {{
+        color: {sidebar_text} !important;
+    }}
+    /* Info box text */
+    section[data-testid="stSidebar"] .stAlert p {{
+        color: {sidebar_subtext} !important;
+    }}
+    h1, h2, h3, h4, .stButton > button {{
         text-transform: uppercase !important;
-    }
+    }}
     </style>
     """, unsafe_allow_html=True)
 
