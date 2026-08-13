@@ -116,6 +116,7 @@ def main():
     # Sync sidebar radio to current_page BEFORE rendering the widget.
     # Without this, the keyed radio ignores `index=` on reruns and
     # overwrites current_page back to whatever it last showed.
+    curr_val = st.session_state.current_page
     for k, v in pages_map.items():
         if v == curr_val:
             st.session_state["sidebar_nav"] = k
