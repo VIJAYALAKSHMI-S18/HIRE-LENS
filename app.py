@@ -1,9 +1,14 @@
 import streamlit as st
 
 # Set Streamlit Page Configuration
+from PIL import Image as _PIL_Image
+import os as _os
+_logo_path = _os.path.join(_os.path.dirname(__file__), "assets", "hirelens_logo.jpg")
+_page_icon = _PIL_Image.open(_logo_path) if _os.path.exists(_logo_path) else "🎯"
+
 st.set_page_config(
     page_title="HIRELENS — AI RESUME ANALYZER & ATS COMPATIBILITY PLATFORM",
-    page_icon="🎯",
+    page_icon=_page_icon,
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -53,12 +58,23 @@ def main():
     """, unsafe_allow_html=True)
 
     # Sidebar Branding & Navigation
-    st.sidebar.markdown("""
+    import base64 as _b64, os as _os2
+    _lp = _os2.path.join(_os2.path.dirname(__file__), "assets", "hirelens_logo.jpg")
+    if _os2.path.exists(_lp):
+        with open(_lp, "rb") as _f:
+            _logo_b64 = _b64.b64encode(_f.read()).decode()
+        _logo_img = f"<img src='data:image/jpeg;base64,{_logo_b64}' style='width:72px;height:72px;border-radius:16px;margin-bottom:10px;object-fit:cover;box-shadow:0 4px 20px rgba(79,140,255,0.3);' />"
+    else:
+        _logo_img = "<div style='font-size:3rem;'>🎯</div>"
+
+    wordmark_color = "#FFFFFF" if dark_mode else "#0F172A"
+    st.sidebar.markdown(f"""
     <div style='text-align: center; padding: 10px 0 20px 0;'>
-        <h1 style='margin: 0; font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, #4F8CFF 0%, #8B5CF6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>
-            🎯 HIRELENS
+        {_logo_img}
+        <h1 style='margin: 0; font-size: 1.8rem; font-weight: 800; color: {wordmark_color}; letter-spacing: 3px;'>
+            HIRELENS
         </h1>
-        <p style='margin: 4px 0 0 0; font-size: 0.85rem; color: #38BDF8; font-weight: 600;'>
+        <p style='margin: 4px 0 0 0; font-size: 0.75rem; color: #38BDF8; font-weight: 600; letter-spacing: 0.5px;'>
             SEE YOUR RESUME THROUGH THE EYES OF RECRUITERS.
         </p>
     </div>
@@ -97,15 +113,15 @@ def main():
 
     page_names = list(pages_map.keys())
     
-    # Safely match current page
-    curr_val = st.session_state.current_page
-    current_key = "🏠 HOME"
+    # Sync sidebar radio to current_page BEFORE rendering the widget.
+    # Without this, the keyed radio ignores `index=` on reruns and
+    # overwrites current_page back to whatever it last showed.
     for k, v in pages_map.items():
         if v == curr_val:
-            current_key = k
+            st.session_state["sidebar_nav"] = k
             break
 
-    selected_page_name = st.sidebar.radio("NAVIGATION MENU", page_names, index=page_names.index(current_key), key="sidebar_nav")
+    selected_page_name = st.sidebar.radio("NAVIGATION MENU", page_names, key="sidebar_nav")
     st.session_state.current_page = pages_map[selected_page_name]
 
     st.sidebar.markdown("<br><hr style='border-color: rgba(255,255,255,0.08);'><br>", unsafe_allow_html=True)
