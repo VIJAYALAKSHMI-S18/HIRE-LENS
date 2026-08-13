@@ -46,6 +46,22 @@ def init_db():
     );
     """)
 
+    # Resume A/B Tests Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS ab_tests (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        resume_a_name TEXT NOT NULL,
+        resume_b_name TEXT NOT NULL,
+        job_title TEXT NOT NULL,
+        score_a REAL NOT NULL,
+        score_b REAL NOT NULL,
+        winner_label TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(user_id) REFERENCES users(id)
+    );
+    """)
+
     conn.commit()
     conn.close()
 
@@ -203,3 +219,50 @@ def update_user_profile(user_id: int, new_name: str, new_password: str = None):
 
     conn.commit()
     conn.close()
+
+def save_ab_test(user_id: int, resume_a_name: str, resume_b_name: str, job_title: str, score_a: float, score_b: float, winner_label: str):
+    """Saves A/B test comparison result to DB."""
+    init_db()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO ab_tests (user_id, resume_a_name, resume_b_name, job_title, score_a, score_b, winner_label)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (user_id, resume_a_name, resume_b_name, job_title or "Target Position", score_a, score_b, winner_label))
+
+    ab_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    return ab_id
+
+def get_user_ab_tests(user_id: int):
+    """Retrieves all past A/B comparison records for a specific user."""
+    init_db()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT id, resume_a_name, resume_b_name, job_title, score_a, score_b, winner_label, created_at
+    FROM ab_tests
+    WHERE user_id = ?
+    ORDER BY created_at DESC
+    """, (user_id,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    tests = []
+    for r in rows:
+        tests.append({
+            "id": r[0],
+            "resume_a_name": r[1],
+            "resume_b_name": r[2],
+            "job_title": r[3],
+            "score_a": r[4],
+            "score_b": r[5],
+            "winner_label": r[6],
+            "created_at": r[7]
+        })
+    return tests
+

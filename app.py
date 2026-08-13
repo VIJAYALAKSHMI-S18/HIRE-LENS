@@ -12,7 +12,7 @@ from utils.authentication import init_auth_session, is_logged_in, logout, render
 from utils.database import init_db
 from utils.theme import apply_theme
 
-from views import home, analyzer, dashboard, jobs, history, profile, settings
+from views import home, analyzer, dashboard, jobs, history, profile, settings, rewriter, explainability, skim, ab_testing
 
 def main():
     # Initialize SQLite Database & Authentication State
@@ -71,6 +71,10 @@ def main():
         "🏠 HOME": "home",
         "🔍 RESUME ANALYZER": "analyzer",
         "📊 DASHBOARD": "dashboard",
+        "✨ BULLET REWRITER": "rewriter",
+        "🔍 WHY THIS SCORE?": "explainability",
+        "👁 RECRUITER SKIM": "skim",
+        "📊 A/B TESTING": "ab_testing",
         "💼 COMPARE JOBS": "jobs",
         "🕘 HISTORY": "history",
         "👤 PROFILE": "profile",
@@ -117,6 +121,14 @@ def main():
         analyzer.render()
     elif curr == "dashboard":
         dashboard.render()
+    elif curr == "rewriter":
+        rewriter.render()
+    elif curr == "explainability":
+        explainability.render()
+    elif curr == "skim":
+        skim.render()
+    elif curr == "ab_testing":
+        ab_testing.render()
     elif curr == "jobs":
         jobs.render()
     elif curr == "history":

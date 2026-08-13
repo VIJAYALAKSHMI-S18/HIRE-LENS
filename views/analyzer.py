@@ -153,6 +153,11 @@ def render():
 
             st.progress(int(res["education_score"]))
             st.markdown(f"**EDUCATION MATCH:** {res['education_score']}%")
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("🔍 WHY THIS SCORE? (EXPLAINABILITY)", key="btn_why_this_score"):
+                st.session_state.current_page = "explainability"
+                st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
 
         # Matched / Missing / Additional Skills Section
